@@ -6,39 +6,47 @@ import "leaflet/dist/leaflet.css";
 import "./App.css";
 import L from "leaflet";
 import Swal from "sweetalert2";
-import LocationMap from "./component/LocationMap";
+import LocationMap from "./component/LocationMap"; // Import LocationMap component
 
 const base_url = import.meta.env.VITE_API_BASE_URL;
 
-// Define custom icon for house
-const sevenIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/128/11891/11891781.png", // URL for house icon
-  iconSize: [38, 38], // size of the icon
-  iconAnchor: [22, 38], // point of the icon which will correspond to marker's location
-  popupAnchor: [0, -40], // point from which the popup should open relative to the iconAnchor
+// Define custom icons
+const storeIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/11891/11891781.png",
+  iconSize: [38, 38],
+  iconAnchor: [22, 38],
+  popupAnchor: [0, -40],
 });
+
 const houseIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/128/619/619153.png", // URL for house icon
-  iconSize: [38, 38], // size of the icon
-  iconAnchor: [22, 38], // point of the icon which will correspond to marker's location
-  popupAnchor: [0, -40], // point from which the popup should open relative to the iconAnchor
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/619/619153.png",
+  iconSize: [38, 38],
+  iconAnchor: [22, 38],
+  popupAnchor: [0, -40],
+});
+
+// Custom icon for selected store
+const selectedStoreIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/149/149059.png", // ไอคอนใหม่สำหรับร้านค้าเมื่อถูกเลือก
+  iconSize: [38, 38],
+  iconAnchor: [22, 38],
+  popupAnchor: [0, -40],
 });
 
 function App() {
   const center = [13.838500199744178, 100.02534412184882];
   const [stores, setStores] = useState([]);
   const [myLocation, setMylocation] = useState({ lat: "", lng: "" });
-  const [selectedStore, setSelectedStore] = useState(null); // Store selected location
+  const [selectedStore, setSelectedStore] = useState(null);
 
   const [deliveryZone, setDeliveryZone] = useState({
-    lat: 13.8145263, //ว่องพชรพันธ์
+    lat: 13.8145263,
     lng: 100.04178689,
     radius: 1000,
   });
 
-  //ฟังชั่นในการหาcalculateDistance ระหว่าง 2 จุด โดยใข้  Haversine Formular
   const calculateDistance = (lat1, lng1, lat2, lng2) => {
-    const R = 6371e3; //Eath radius in meters
+    const R = 6371e3; // Earth radius in meters
     const phi_1 = (lat1 * Math.PI) / 180;
     const phi_2 = (lat2 * Math.PI) / 180;
 
@@ -53,14 +61,14 @@ function App() {
         Math.sin(delta_lambda / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; //Distance in  meters
+    return R * c; // Distance in meters
   };
 
   useEffect(() => {
     const fetchStores = async () => {
       try {
         const response = await axios.get(`${base_url}/api/stores`);
-        console.log(response.data); // Log the response to check if data is correct
+        console.log(response.data);
         if (response.status === 200) {
           setStores(response.data);
         }
@@ -149,6 +157,11 @@ function App() {
               <Marker
                 key={store.id}
                 position={[store.lat, store.lng]}
+                icon={
+                  selectedStore && selectedStore.id === store.id
+                    ? selectedStoreIcon
+                    : storeIcon
+                } // เปลี่ยนไอคอนถ้ามีการเลือก
                 eventHandlers={{
                   click: () => {
                     setSelectedStore(store); // Set selected store
@@ -169,12 +182,13 @@ function App() {
             onLocationSelect={setMylocation}
           />
 
-          {/* Optional: Add selected store marker if any */}
           {selectedStore && (
             <Marker
               position={[selectedStore.lat, selectedStore.lng]}
-              icon={sevenIcon}
+              icon={selectedStoreIcon}
             >
+              {" "}
+              {/* ใช้ selectedStoreIcon */}
               <Popup>
                 <b>{selectedStore.name}</b>
                 <p>{selectedStore.address}</p>
