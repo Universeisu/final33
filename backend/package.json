@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "API for  store deliverly zone checker",
+  "description": "APT for Store Delivery zone Check",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
@@ -13,6 +13,9 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "pg": "^8.13.0",
+    "postgres": "^3.4.4",
+    "sequelize": "^6.37.4"
   }
 }
