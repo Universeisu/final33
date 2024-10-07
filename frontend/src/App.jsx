@@ -40,8 +40,8 @@ function App() {
   const [selectedStore, setSelectedStore] = useState(null);
 
   const [deliveryZone, setDeliveryZone] = useState({
-    lat: 13.8145263,
-    lng: 100.04178689,
+    lat: null,
+    lng: null,
     radius: 1000,
   });
 
@@ -98,32 +98,35 @@ function App() {
       });
       return;
     }
-    if (!deliveryZone.lat || !deliveryZone.lng) {
+
+    if (!selectedStore) {
       Swal.fire({
         title: "Error!",
-        text: "Please enter your valid Store Location",
+        text: "Please select a store",
         icon: "error",
         confirmButtonText: "OK",
       });
       return;
     }
+
     const distance = calculateDistance(
       myLocation.lat,
       myLocation.lng,
-      deliveryZone.lat,
-      deliveryZone.lng
+      selectedStore.lat,
+      selectedStore.lng
     );
+
     if (distance <= deliveryZone.radius) {
       Swal.fire({
         title: "Success",
-        text: "You are within the delivery zone",
+        text: "You are within the delivery zone for " + selectedStore.name,
         icon: "success",
         confirmButtonText: "OK",
       });
     } else {
       Swal.fire({
         title: "Error!",
-        text: "You are outside the delivery zone",
+        text: "You are outside the delivery zone for " + selectedStore.name,
         icon: "error",
         confirmButtonText: "OK",
       });
