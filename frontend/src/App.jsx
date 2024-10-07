@@ -10,6 +10,7 @@ import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import "./App.css";
 import L from "leaflet";
+import Swal from "sweetalert2";
 
 const base_url = import.meta.env.VITE_API_BASE_URL;
 
@@ -26,6 +27,31 @@ function App() {
   const [stores, setStores] = useState([]);
   const [myLocation, setMylocation] = useState({ lat: "", lng: "" });
 
+  const [deliveryZone,setDeliveryZone] = useState({ 
+    lat: 13.82804643, 
+    lng: 100.04233271 ,
+    radius: 1000,
+  });
+
+
+  //function to calculate distance between 2 point  using haversin formular
+  const calculateDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371e3; //Eath radius in meters
+    const phi_1 = (lat1 * Math.PI) / 180;
+    const phi_2 = (lat2 * Math.PI) / 180;
+
+    const delta_phi = ((lat2 - lat1) * Math.PI) / 180;
+    const delta_lambda = ((lng2 - lng1) * Math.PI) / 180;
+
+    const a =
+      Math.sin(delta_phi / 2) * Math.sin(delta_phi / 2) +
+      Math.cos(phi_1) *
+        Math.cos(phi_2) *
+        Math.sin(delta_lambda / 2) *
+        Math.sin(delta_lambda / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; //Distance in meters
+  };
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -59,11 +85,55 @@ function App() {
       });
     });
   };
+  const handleLocationCheck = () => {
+    if (!myLocation.lat === "" || myLocation.lng === "") {
+      Swal.fire({
+        title: "error!",
+        text: "Please enter your valid location",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+    if (deliveryZone.lat === "" || deliveryZone.lng === "") {
+      Swal.fire({
+        title: "error!",
+        text: "Please enter your valid Store Location",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+    const distance = calculateDistance(
+      myLocation.lat,
+      myLocation.lng,
+      deliveryZone.lat,
+      deliveryZone.lng
+    );
+    if (distance <= deliveryZone.radius) {
+      Swal.fire({
+        title: "success",
+        text: "You are within the derivery zone",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } else {
+      Swal.fire({
+        title: "error!",
+        text: "You are outside the derivery zone",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+
 
   return (
     <>
       <h1>STORE DELIVERY ZONE CHECKER</h1>
       <button onClick={handlerGetLocation}>Get My Location</button>
+      <button onClick={handleLocationCheck}>Check Delivery availabilitty</button>
       <div>
         <MapContainer
           center={center}
@@ -84,10 +154,7 @@ function App() {
 
           {stores.length > 0 &&
             stores.map((store) => (
-              <Marker
-                key={store.id}
-                position={[store.lat, store.lng]}
-              >
+              <Marker key={store.id} position={[store.lat, store.lng]}>
                 <Popup>
                   <b>{store.name}</b>
                   <p>{store.address}</p>
