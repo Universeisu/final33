@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import axios from "axios";
@@ -12,14 +12,14 @@ const base_url = import.meta.env.VITE_API_BASE_URL;
 
 // Define custom icons
 const storeIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/128/11891/11891781.png",
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/9198/9198446.png",
   iconSize: [38, 38],
   iconAnchor: [22, 38],
   popupAnchor: [0, -40],
 });
 
 const houseIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/128/619/619153.png",
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/7720/7720526.png",
   iconSize: [38, 38],
   iconAnchor: [22, 38],
   popupAnchor: [0, -40],
@@ -27,7 +27,7 @@ const houseIcon = new L.Icon({
 
 // Custom icon for selected store
 const selectedStoreIcon = new L.Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/128/149/149059.png", // ไอคอนใหม่สำหรับร้านค้าเมื่อถูกเลือก
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/7877/7877890.png", // ไอคอนใหม่สำหรับร้านค้าเมื่อถูกเลือก
   iconSize: [38, 38],
   iconAnchor: [22, 38],
   popupAnchor: [0, -40],
@@ -135,13 +135,25 @@ function App() {
 
   return (
     <>
-      <h1>STORE DELIVERY ZONE CHECKER</h1>
-      <button className="get-location-btn" onClick={handlerGetLocation}>
-        Get My Location
-      </button>
-      <button className="get-location-btn" onClick={handleLocationCheck}>
-        Check Delivery Availability
-      </button>
+      <div className="header-container">
+        <img
+          src="https://cdn-icons-png.flaticon.com/256/12398/12398470.png"
+          alt="Logo"
+          className="logo"
+        />
+        <h1>
+          <span className="color1">STORE DELIVERY</span>
+          <span className="color-red"> ZONE CHECKER</span>
+        </h1>
+      </div>
+      <div className="button-container">
+        <button className="get-location-btn" onClick={handlerGetLocation}>
+          Get My Location
+        </button>
+        <button className="get-location-btn" onClick={handleLocationCheck}>
+          Check Delivery Availability
+        </button>
+      </div>
 
       <div>
         <MapContainer
@@ -174,6 +186,7 @@ function App() {
                 <Popup>
                   <b>{store.name}</b>
                   <p>{store.address}</p>
+                  <p>Delivery Radius: {store.raduis} meters</p>
                   <a href={store.direction}>Get Direction</a>
                 </Popup>
               </Marker>
@@ -190,11 +203,11 @@ function App() {
               position={[selectedStore.lat, selectedStore.lng]}
               icon={selectedStoreIcon}
             >
-              {" "}
               {/* ใช้ selectedStoreIcon */}
               <Popup>
                 <b>{selectedStore.name}</b>
                 <p>{selectedStore.address}</p>
+                <p>Delivery Radius: {selectedStore.radius} meters</p>
               </Popup>
             </Marker>
           )}

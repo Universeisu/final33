@@ -1,1 +1,63 @@
+/* ในไฟล์ App.css หรือไฟล์ CSS ที่คุณใช้ */
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+  margin: 0;
+}
+
+.header-container {
+  display: flex;
+  align-items: center; /* จัดแนวแนวตั้งให้โลโก้และข้อความอยู่ตรงกลาง */
+  justify-content: center; /* จัดแนวนอนให้โลโก้และข้อความอยู่ตรงกลาง */
+}
+
+.logo {
+  height: 60px; /* ปรับความสูงให้สูงขึ้น */
+  width: auto; /* ปรับให้ความกว้างเป็นอัตโนมัติตามสัดส่วน */
+  margin-right: 10px; /* ระยะห่างระหว่างโลโก้และข้อความ */
+}
+
+h1 {
+  text-align: center;
+}
+
+.color1 {
+  color: #008163; /* สีแรก */
+}
+
+.color-red {
+  color: #EE2526; /* สีแดงสำหรับ Zone checker */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* ช่องว่างระหว่างปุ่ม */
+  margin-bottom: 20px; /* ระยะห่างจากส่วนหัว */
+}
+
+.get-location-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button {
+  background-color: #008163; /* สีเขียว */
+  color: #E9EFEC;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 10px; /* เพิ่มระยะห่าง */
+}
+
+button:hover {
+  background-color: #EE2526; /* สีเมื่อ hover */
+}
 
